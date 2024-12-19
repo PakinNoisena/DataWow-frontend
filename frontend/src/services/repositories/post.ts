@@ -89,5 +89,59 @@ export default () => {
         throw error;
       }
     },
+    async fetchSinglePost(postId: string) {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/dataWow/post/${postId}`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        return result;
+      } catch (error) {
+        console.error("Error fetching single post:", error);
+        throw error;
+      }
+    },
+    async editPost(
+      postId: string,
+      userId: string,
+      data: Partial<{
+        title: string;
+        description: string;
+        communityId: number;
+      }>
+    ) {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/dataWow/post/${postId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "user-id": userId,
+            },
+            body: JSON.stringify(data),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        console.log("Post updated successfully:", result);
+
+        return result;
+      } catch (error) {
+        console.error("Error editing post:", error);
+        throw error;
+      }
+    },
   };
 };
