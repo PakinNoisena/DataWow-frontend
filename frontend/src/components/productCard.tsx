@@ -7,6 +7,9 @@ interface ProductCardProps {
   description: string;
   commentsCount: number;
   avatarUrl: string;
+  userId?: string; // Optional userId for showing edit/delete
+  onEdit?: () => void; // Optional onEdit handler
+  onDelete?: () => void; // Optional onDelete handler
   onClick?: () => void; // Optional onClick handler
 }
 
@@ -17,6 +20,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
   description,
   commentsCount,
   avatarUrl,
+  userId,
+  onEdit,
+  onDelete,
   onClick,
 }) => {
   return (
@@ -38,6 +44,57 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {/* Author and Category */}
         <div className="flex items-center justify-between">
           <h4 className="font-semibold text-gray-800">{author}</h4>
+          {/* Show Edit/Delete if userId matches ownerUserId */}
+          {userId && (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent parent click
+                  onEdit && onEdit();
+                }}
+                className="text-gray-500 hover:text-gray-700"
+                aria-label="Edit"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.862 3.487a2.25 2.25 0 0 1 3.182 3.182L7.317 19.395l-4.038.897.897-4.038 12.686-12.687z"
+                  />
+                </svg>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent parent click
+                  onDelete && onDelete();
+                }}
+                className="text-gray-500 hover:text-gray-700"
+                aria-label="Delete"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18.75A2.25 2.25 0 0 0 8.25 21h7.5A2.25 2.25 0 0 0 18 18.75V9H6v9.75zM9 9V7.5a3 3 0 1 1 6 0V9m-9 0h12"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
         {/* Category */}
         <span className="bg-gray-100 text-gray-600 text-sm px-2 py-1 rounded">
