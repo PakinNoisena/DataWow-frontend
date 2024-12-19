@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dropdown from "./dropdown";
 
 interface CreatePostCardProps {
@@ -22,11 +22,14 @@ export default function CreatePostCard({
   defaultTitle,
   defaultDescription,
 }: CreatePostCardProps) {
-  const [selectedCommunity, setSelectedCommunity] = useState<string>(
-    defaultCommunity || ""
-  );
+  const [selectedCommunity, setSelectedCommunity] =
+    useState<string>(defaultCommunity);
   const [title, setTitle] = useState<string>(defaultTitle || "");
   const [content, setContent] = useState<string>(defaultDescription || "");
+
+  useEffect(() => {
+    setSelectedCommunity(defaultCommunity);
+  }, [defaultCommunity]);
 
   const handlePost = () => {
     if (!selectedCommunity || !title.trim() || !content.trim()) {
@@ -59,7 +62,7 @@ export default function CreatePostCard({
             <Dropdown
               items={communities}
               onSelect={(value) => setSelectedCommunity(value)}
-              defaultSelected={defaultCommunity || ""}
+              defaultSelected={String(selectedCommunity)}
               bgColor="bg-blue-700"
               borderColor="border-blue-500"
               textColor="text-white"
