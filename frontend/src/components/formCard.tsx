@@ -32,7 +32,7 @@ export default function CreatePostCard({
   }, [defaultCommunity]);
 
   const handlePost = () => {
-    if (!selectedCommunity || !title.trim() || !content.trim()) {
+    if (selectedCommunity === "" || !title.trim() || !content.trim()) {
       alert("Please fill in all fields.");
       return;
     }
