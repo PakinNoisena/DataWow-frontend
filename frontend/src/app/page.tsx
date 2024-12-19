@@ -10,8 +10,11 @@ import { useCommunityManagementStore } from "@/stores/community";
 import { CommunityManagement } from "@/services/models/community";
 import { PostManagement } from "@/services/models/post";
 import { usePostManagementStore } from "@/stores/post";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
   const [localCommunityList, setLocalCommunityList] = useState<
     CommunityManagement[]
   >([]);
@@ -86,6 +89,10 @@ export default function Home() {
     setSelectedOption(value); // Update selectedOption with the selected community's id
   };
 
+  const handleCreateBtn = () => {
+    router.push("/post/create");
+  };
+
   return (
     <div>
       {/* Navbar with dynamic sign-in state */}
@@ -119,7 +126,7 @@ export default function Home() {
             <Button
               text="Create +"
               className="bg-green-500 text-white hover:bg-green-700"
-              onClick={() => alert("Create button clicked!")}
+              onClick={handleCreateBtn}
             />
           )}
         </div>
