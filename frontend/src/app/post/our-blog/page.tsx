@@ -11,6 +11,7 @@ import SearchForm from "@/components/searchForm";
 import Dropdown from "@/components/dropdown";
 import Button from "@/components/button";
 import ProductCard from "@/components/productCard";
+import ConfirmModal from "@/components/confirmModal";
 
 export default function OurBlog() {
   const router = useRouter();
@@ -30,6 +31,8 @@ export default function OurBlog() {
   const { fetchPostList, postList, deletePost } = usePostManagementStore();
 
   const [selectedOption, setSelectedOption] = useState<string>("all");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [postToDelete, setPostToDelete] = useState<string | null>(null);
 
   // Retrieve user from sessionStorage and set sign-in state
   useEffect(() => {
@@ -109,15 +112,27 @@ export default function OurBlog() {
     router.push(`/post/edit/${postId}`);
   };
 
-  const handleDelete = async (postId: string) => {
-    if (userId) {
-      await deletePost(postId, userId);
+  const handleDelete = (postId: string) => {
+    setPostToDelete(postId); // Set the post ID to be deleted
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const confirmDelete = async () => {
+    if (postToDelete && userId) {
+      await deletePost(postToDelete, userId);
+      setIsModalOpen(false);
+      setPostToDelete(null); // Reset the state
       await fetchPostList({
         search: debouncedSearchText,
         community: selectedOption === "all" ? "" : selectedOption,
         userId,
       });
     }
+  };
+
+  const cancelDelete = () => {
+    setIsModalOpen(false);
+    setPostToDelete(null); // Reset the state
   };
 
   // Show a loading indicator while verifying the session
@@ -182,6 +197,16 @@ export default function OurBlog() {
           </div>
         ))}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {isModalOpen && (
+        <ConfirmModal
+          title="Please confirm if you wish to delete the post"
+          description="Are you sure you want to delete the post? Once deleted, it cannot be recovered."
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
     </div>
   );
 }
