@@ -14,7 +14,7 @@ export default function NavBar({ signIn }: NavBarProps) {
   };
 
   return (
-    <nav className="bg-green-500 text-white">
+    <nav className="bg-green-500 text-white fixed top-0 left-0 w-full z-50 shadow-md">
       <div className="container mx-auto px-4 md:flex items-center gap-6">
         {/* Logo */}
         <div className="flex items-center justify-between md:w-auto w-full">
@@ -51,7 +51,7 @@ export default function NavBar({ signIn }: NavBarProps) {
         <div
           className={`${
             isMobileMenuOpen
-              ? "fixed right-0 top-0 h-full w-[70%] bg-green-500 text-white flex flex-col"
+              ? "fixed right-0 top-0 h-full w-[70%] bg-green-500 text-white flex flex-col z-40"
               : "hidden"
           } md:flex md:flex-row justify-start md:space-x-1 pb-3 md:pb-0 navigation-menu`}
         >
