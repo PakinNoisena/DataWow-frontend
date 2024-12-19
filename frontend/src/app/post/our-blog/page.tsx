@@ -12,7 +12,7 @@ import Dropdown from "@/components/dropdown";
 import Button from "@/components/button";
 import ProductCard from "@/components/productCard";
 
-export default function PostDetail() {
+export default function OurBlog() {
   const router = useRouter();
 
   const [localCommunityList, setLocalCommunityList] = useState<
@@ -105,7 +105,6 @@ export default function PostDetail() {
   };
 
   const handleEdit = (postId: string) => {
-    console.log(`Edit post with ID: ${postId}`);
     // Navigate to edit page
     router.push(`/post/edit/${postId}`);
   };
