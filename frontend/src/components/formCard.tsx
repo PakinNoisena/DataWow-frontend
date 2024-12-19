@@ -63,10 +63,8 @@ export default function CreatePostCard({
               items={communities}
               onSelect={(value) => setSelectedCommunity(value)}
               defaultSelected={String(selectedCommunity)}
-              bgColor="bg-blue-700"
-              borderColor="border-blue-500"
-              textColor="text-white"
-              hoverBgColor="hover:bg-blue-800"
+              bgColor="bg-white"
+              borderColor="border-green-500"
             />
           </div>
           <div className="w-3/4"></div>

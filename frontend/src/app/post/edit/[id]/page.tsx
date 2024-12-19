@@ -82,7 +82,6 @@ export default function EditPost() {
           description: data.content,
           communityId: parseInt(data.community, 10),
         });
-        console.log("Post updated successfully!");
         router.push("/"); // Redirect to the home page or another page after a successful edit
       } catch (error) {
         console.error("Failed to update post:", error);

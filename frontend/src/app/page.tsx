@@ -85,7 +85,6 @@ export default function Home() {
   };
 
   const handleDropdownSelect = (value: string) => {
-    console.log("Selected dropdown option:", value);
     setSelectedOption(value); // Update selectedOption with the selected community's id
   };
 
@@ -116,7 +115,6 @@ export default function Home() {
             onSelect={handleDropdownSelect}
             defaultSelected="all"
             bgColor="bg-white"
-            hoverBgColor="hover:bg-blue-800"
           />
 
           {/* Create Button */}

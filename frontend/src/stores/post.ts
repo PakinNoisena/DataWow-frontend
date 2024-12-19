@@ -52,7 +52,6 @@ export const usePostManagementStore = create<PostManagementState>()(
         try {
           const result = await postRepo().fetchSinglePost(postId); // Call the API method
           set({ singlePost: result.data || null }); // Update the single post in the store
-          console.log("Single post fetched successfully:", result);
         } catch (error) {
           console.error(
             `Failed to fetch single post with ID ${postId}:`,
@@ -70,7 +69,6 @@ export const usePostManagementStore = create<PostManagementState>()(
             community: String(data.communityId),
           };
           await get().fetchPostList(query); // Refresh the post list
-          console.log("Post created successfully:", result);
         } catch (error) {
           console.error("Failed to create post:", error);
         }
@@ -89,7 +87,6 @@ export const usePostManagementStore = create<PostManagementState>()(
           // Optionally, fetch the single post and the post list again to update the store
           await get().fetchSinglePost(postId);
           await get().fetchPostList({ search: get().search });
-          console.log(`Post with ID ${postId} edited successfully:`, result);
         } catch (error) {
           console.error(`Failed to edit post with ID ${postId}:`, error);
         }
@@ -99,7 +96,6 @@ export const usePostManagementStore = create<PostManagementState>()(
           await postRepo().deletePost(postId, userId); // Call the API method to delete the post
           // Optionally, fetch the post list again to update the store
           await get().fetchPostList({ search: get().search });
-          console.log(`Post with ID ${postId} deleted successfully.`);
         } catch (error) {
           console.error(`Failed to delete post with ID ${postId}:`, error);
         }

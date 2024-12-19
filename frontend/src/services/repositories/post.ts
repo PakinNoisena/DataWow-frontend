@@ -82,8 +82,6 @@ export default () => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
-        console.log("Post deleted successfully.");
       } catch (error) {
         console.error("Error deleting post:", error);
         throw error;
@@ -134,8 +132,6 @@ export default () => {
         }
 
         const result = await response.json();
-
-        console.log("Post updated successfully:", result);
 
         return result;
       } catch (error) {
