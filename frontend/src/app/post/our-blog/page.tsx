@@ -27,7 +27,7 @@ export default function PostDetail() {
 
   const { fetchCommunityManagementList, communityManagementList } =
     useCommunityManagementStore();
-  const { fetchPostList, postList } = usePostManagementStore();
+  const { fetchPostList, postList, deletePost } = usePostManagementStore();
 
   const [selectedOption, setSelectedOption] = useState<string>("all");
 
@@ -97,12 +97,28 @@ export default function PostDetail() {
   };
 
   const handleDropdownSelect = (value: string) => {
-    console.log("Selected dropdown option:", value);
     setSelectedOption(value); // Update selectedOption with the selected community's id
   };
 
   const handleCreateBtn = () => {
     router.push("/post/create");
+  };
+
+  const handleEdit = (postId: string) => {
+    console.log(`Edit post with ID: ${postId}`);
+    // Navigate to edit page
+    router.push(`/post/edit/${postId}`);
+  };
+
+  const handleDelete = async (postId: string) => {
+    if (userId) {
+      await deletePost(postId, userId);
+      await fetchPostList({
+        search: debouncedSearchText,
+        community: selectedOption === "all" ? "" : selectedOption,
+        userId,
+      });
+    }
   };
 
   // Show a loading indicator while verifying the session
@@ -151,8 +167,8 @@ export default function PostDetail() {
 
       {/* Cards Section */}
       <div className="mt-6 flex flex-col items-center space-y-4">
-        {localPostList.map((post, index) => (
-          <div key={index} className="w-full max-w-2xl">
+        {localPostList.map((post) => (
+          <div key={post.id} className="w-full max-w-2xl">
             <ProductCard
               author={post.owner.username}
               category={post.community.name}
@@ -160,7 +176,9 @@ export default function PostDetail() {
               description={post.description}
               commentsCount={post.comments?.length || 0}
               avatarUrl={"https://via.placeholder.com/48"}
-              onClick={() => console.log(`Post clicked: ${post.title}`)}
+              userId={userId!} // Current logged-in user ID
+              onEdit={() => handleEdit(post.id)}
+              onDelete={() => handleDelete(post.id)}
             />
           </div>
         ))}
