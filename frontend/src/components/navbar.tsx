@@ -18,7 +18,7 @@ export default function NavBar({ signIn }: NavBarProps) {
       <div className="container mx-auto px-4 md:flex items-center gap-6">
         {/* Logo */}
         <div className="flex items-center justify-between md:w-auto w-full">
-          <Link href="#" className="py-5 px-2 text-white flex-1 font-bold">
+          <Link href="/" className="py-5 px-2 text-white flex-1 font-bold">
             <i> a Board</i>
           </Link>
 
@@ -74,11 +74,11 @@ export default function NavBar({ signIn }: NavBarProps) {
               <path d="M5 12h13M12 5l7 7-7 7" />
             </svg>
           </button>
-          <Link href="#" className="py-2 px-3 block text-left">
+          <Link href="/" className="py-2 px-3 block text-left">
             Home
           </Link>
           {signIn && (
-            <Link href="#" className="py-2 px-3 block">
+            <Link href="/post/our-blog" className="py-2 px-3">
               Our Blog
             </Link>
           )}
