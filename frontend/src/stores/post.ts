@@ -19,6 +19,7 @@ export interface PostManagementState {
     communityId: number;
     userId: string;
   }) => Promise<void>; // Action to create a post
+  deletePost: (postId: string, userId: string) => Promise<void>;
 }
 
 export const usePostManagementStore = create<PostManagementState>()(
@@ -52,6 +53,16 @@ export const usePostManagementStore = create<PostManagementState>()(
           console.log("Post created successfully:", result);
         } catch (error) {
           console.error("Failed to create post:", error);
+        }
+      },
+      deletePost: async (postId, userId) => {
+        try {
+          await postRepo().deletePost(postId, userId); // Call the API method to delete the post
+          // Optionally, fetch the post list again to update the store
+          await get().fetchPostList({ search: get().search });
+          console.log(`Post with ID ${postId} deleted successfully.`);
+        } catch (error) {
+          console.error(`Failed to delete post with ID ${postId}:`, error);
         }
       },
     }),
