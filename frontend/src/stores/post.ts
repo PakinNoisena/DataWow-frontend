@@ -9,8 +9,9 @@ export interface PostManagementState {
   search: string; // Global search state
   setSearch: (search: string) => void; // Method to update search state
   fetchPostList: (query: {
-    search: string;
-    community: string;
+    search?: string;
+    community?: string;
+    userId?: string;
   }) => Promise<void>;
   createPost: (data: {
     title: string;
