@@ -12,6 +12,12 @@ export interface PostManagementState {
     search: string;
     community: string;
   }) => Promise<void>;
+  createPost: (data: {
+    title: string;
+    description: string;
+    communityId: number;
+    userId: string;
+  }) => Promise<void>; // Action to create a post
 }
 
 export const usePostManagementStore = create<PostManagementState>()(
@@ -30,6 +36,21 @@ export const usePostManagementStore = create<PostManagementState>()(
           set({ postList: results.data || [] }); // Update the post list in the store
         } catch (error) {
           console.error("Failed to fetch post list:", error);
+        }
+      },
+
+      createPost: async (data) => {
+        try {
+          const result = await postRepo().createPost(data, data.userId); // Call the API method
+          // Optionally, fetch the post list again to update the store
+          const query = {
+            search: get().search,
+            community: String(data.communityId),
+          };
+          await get().fetchPostList(query); // Refresh the post list
+          console.log("Post created successfully:", result);
+        } catch (error) {
+          console.error("Failed to create post:", error);
         }
       },
     }),
