@@ -67,5 +67,27 @@ export default () => {
         throw error;
       }
     },
+    async deletePost(postId: string, userId: string): Promise<void> {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/dataWow/post/${postId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "user-id": userId,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        console.log("Post deleted successfully.");
+      } catch (error) {
+        console.error("Error deleting post:", error);
+        throw error;
+      }
+    },
   };
 };
