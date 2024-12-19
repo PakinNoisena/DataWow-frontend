@@ -12,21 +12,37 @@ import { PostManagement } from "@/services/models/post";
 import { usePostManagementStore } from "@/stores/post";
 
 export default function Home() {
-  const userSignedIn = false;
-
   const [localCommunityList, setLocalCommunityList] = useState<
     CommunityManagement[]
   >([]);
   const [localPostList, setLocalPostList] = useState<PostManagement[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedSearchText, setDebouncedSearchText] = useState<string>("");
+  const [storedUser, setStoredUser] = useState(null);
+  const [isSignIn, setIsSignIn] = useState<boolean>(false);
 
   const { fetchCommunityManagementList, communityManagementList } =
     useCommunityManagementStore();
-
   const { fetchPostList, postList } = usePostManagementStore();
 
   const [selectedOption, setSelectedOption] = useState<string>("all");
+
+  // Retrieve user from sessionStorage and set sign-in state
+  useEffect(() => {
+    const sessionData = sessionStorage.getItem("userManagement-storage");
+    if (sessionData) {
+      const parsedData = JSON.parse(sessionData);
+      const user = parsedData?.state?.user || null;
+      setStoredUser(user); // Update stored user
+      setIsSignIn(!!user); // Set sign-in state based on stored user
+    }
+  }, []);
+
+  // Log changes to `storedUser` and `isSignIn`
+  useEffect(() => {
+    console.log("Updated storedUser:", storedUser);
+    console.log("Updated isSignIn:", isSignIn);
+  }, [storedUser, isSignIn]);
 
   // Debounce search input
   useEffect(() => {
@@ -44,11 +60,10 @@ export default function Home() {
     const fetchData = async () => {
       await fetchCommunityManagementList();
     };
-
     fetchData();
   }, [fetchCommunityManagementList]);
 
-  // Sync Zustand store data with local state
+  // Sync Zustand store data with local state for communities
   useEffect(() => {
     setLocalCommunityList(communityManagementList);
   }, [communityManagementList]);
@@ -61,11 +76,10 @@ export default function Home() {
         community: selectedOption === "all" ? "" : selectedOption, // Use "" for 'all'
       });
     };
-
     fetchPostData();
   }, [debouncedSearchText, selectedOption, fetchPostList]);
 
-  // Sync Zustand store post data with local state
+  // Sync Zustand store post data with local state for posts
   useEffect(() => {
     setLocalPostList(postList);
   }, [postList]);
@@ -81,44 +95,43 @@ export default function Home() {
 
   return (
     <div>
-      <NavBar signIn={userSignedIn} />
-      <div className="p-4 flex justify-center">
-        {/* Container for Search, Dropdown, and Button */}
+      {/* Navbar with dynamic sign-in state */}
+      <NavBar signIn={isSignIn} />
+
+      {/* Search, Dropdown, and Button */}
+      <div className="p-4 flex justify-center mt-20">
         <div className="flex items-center gap-2">
           {/* Search Form */}
-          <div>
-            <SearchForm defaultValue="" onSearch={handleSearch} />
-          </div>
+          <SearchForm defaultValue="" onSearch={handleSearch} />
 
           {/* Dropdown */}
-          <div>
-            <Dropdown
-              items={[
-                { id: "all", name: "All Community" },
-                ...localCommunityList.map((community) => ({
-                  name: community.name,
-                  id: community.id.toString(),
-                })),
-              ]}
-              onSelect={handleDropdownSelect}
-              defaultSelected="all"
-              bgColor="bg-blue-700"
-              borderColor="border-blue-500"
-              textColor="text-white"
-              hoverBgColor="hover:bg-blue-800"
-            />
-          </div>
+          <Dropdown
+            items={[
+              { id: "all", name: "All Community" },
+              ...localCommunityList.map((community) => ({
+                name: community.name,
+                id: community.id.toString(),
+              })),
+            ]}
+            onSelect={handleDropdownSelect}
+            defaultSelected="all"
+            bgColor="bg-blue-700"
+            borderColor="border-blue-500"
+            textColor="text-white"
+            hoverBgColor="hover:bg-blue-800"
+          />
 
-          {/* Button */}
-          <div>
+          {/* Create Button */}
+          {isSignIn && (
             <Button
               text="Create +"
               className="bg-green-500 text-white hover:bg-green-700"
               onClick={() => alert("Create button clicked!")}
             />
-          </div>
+          )}
         </div>
       </div>
+
       {/* Cards Section */}
       <div className="mt-6 flex flex-col items-center space-y-4">
         {localPostList.map((post, index) => (
