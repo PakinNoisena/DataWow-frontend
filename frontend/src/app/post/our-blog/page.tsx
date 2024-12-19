@@ -22,7 +22,7 @@ export default function PostDetail() {
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedSearchText, setDebouncedSearchText] = useState<string>("");
   const [userId, setUserId] = useState<string | null>(null);
-
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSignIn, setIsSignIn] = useState<boolean>(false);
 
   const { fetchCommunityManagementList, communityManagementList } =
@@ -40,7 +40,15 @@ export default function PostDetail() {
       setIsSignIn(!!user); // Set sign-in state based on stored user
       setUserId(user?.id || null);
     }
+    setIsLoading(false);
   }, []);
+
+  // Redirect to home if no userId after loading is complete
+  useEffect(() => {
+    if (!isLoading && !userId) {
+      router.push("/");
+    }
+  }, [isLoading, userId, router]);
 
   // Debounce search input
   useEffect(() => {
@@ -96,6 +104,11 @@ export default function PostDetail() {
   const handleCreateBtn = () => {
     router.push("/post/create");
   };
+
+  // Show a loading indicator while verifying the session
+  if (isLoading) {
+    return <div className="text-center mt-20">Loading...</div>;
+  }
 
   return (
     <div>
