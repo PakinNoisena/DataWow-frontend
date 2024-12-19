@@ -1,19 +1,31 @@
 export default () => {
   return {
-    async fetchPostList(query: { search: string; community: string }) {
+    async fetchPostList(query: {
+      search?: string;
+      community?: string;
+      userId?: string;
+    }) {
       try {
         const baseUrl = "http://localhost:3000/dataWow/post";
 
         // Construct query parameters dynamically
         const params = new URLSearchParams();
-        if (query.search.trim() !== "") {
+        if (query.search && query.search.trim() !== "") {
           params.append("search", query.search);
         }
-        if (query.community.trim() !== "" && query.community !== "all") {
+        if (
+          query.community &&
+          query.community.trim() !== "" &&
+          query.community !== "all"
+        ) {
           params.append("community", query.community);
         }
 
-        const url = `${baseUrl}?${params.toString()}`; // Append query parameters to the base URL
+        if (query.userId && query.userId.trim() !== "") {
+          params.append("userId", query.userId);
+        }
+
+        const url = `${baseUrl}?${params.toString()}`;
 
         const response = await fetch(url);
         if (!response.ok) {
