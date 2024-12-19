@@ -115,9 +115,7 @@ export default function Home() {
             ]}
             onSelect={handleDropdownSelect}
             defaultSelected="all"
-            bgColor="bg-blue-700"
-            borderColor="border-blue-500"
-            textColor="text-white"
+            bgColor="bg-white"
             hoverBgColor="hover:bg-blue-800"
           />
 
@@ -143,7 +141,7 @@ export default function Home() {
               description={post.description}
               commentsCount={post.comments?.length || 0}
               avatarUrl={"https://via.placeholder.com/48"}
-              onClick={() => console.log(`Post clicked: ${post.title}`)}
+              onClick={() => router.push(`/post/detail/${post.id}`)}
             />
           </div>
         ))}
