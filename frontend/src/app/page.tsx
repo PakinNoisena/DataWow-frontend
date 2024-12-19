@@ -18,7 +18,7 @@ export default function Home() {
   const [localPostList, setLocalPostList] = useState<PostManagement[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedSearchText, setDebouncedSearchText] = useState<string>("");
-  const [storedUser, setStoredUser] = useState(null);
+
   const [isSignIn, setIsSignIn] = useState<boolean>(false);
 
   const { fetchCommunityManagementList, communityManagementList } =
@@ -33,16 +33,9 @@ export default function Home() {
     if (sessionData) {
       const parsedData = JSON.parse(sessionData);
       const user = parsedData?.state?.user || null;
-      setStoredUser(user); // Update stored user
       setIsSignIn(!!user); // Set sign-in state based on stored user
     }
   }, []);
-
-  // Log changes to `storedUser` and `isSignIn`
-  useEffect(() => {
-    console.log("Updated storedUser:", storedUser);
-    console.log("Updated isSignIn:", isSignIn);
-  }, [storedUser, isSignIn]);
 
   // Debounce search input
   useEffect(() => {
