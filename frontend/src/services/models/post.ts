@@ -1,3 +1,5 @@
+import { CommentManagement } from "./comment";
+
 export class PostManagement {
   id!: string;
   title!: string;
@@ -10,5 +12,5 @@ export class PostManagement {
     id: string;
     name: string;
   };
-  comments?: any[] = [];
+  comments: CommentManagement[] = [];
 }
