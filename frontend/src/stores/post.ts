@@ -6,6 +6,7 @@ import { PostManagement } from "@/services/models/post";
 // Define the state interface
 export interface PostManagementState {
   postList: PostManagement[];
+  singlePost: PostManagement | null;
   search: string; // Global search state
   setSearch: (search: string) => void; // Method to update search state
   fetchPostList: (query: {
@@ -13,12 +14,18 @@ export interface PostManagementState {
     community?: string;
     userId?: string;
   }) => Promise<void>;
+  fetchSinglePost: (postId: string) => Promise<void>;
   createPost: (data: {
     title: string;
     description: string;
     communityId: number;
     userId: string;
   }) => Promise<void>; // Action to create a post
+  editPost: (
+    postId: string,
+    userId: string,
+    data: Partial<{ title: string; description: string; communityId: number }>
+  ) => Promise<void>;
   deletePost: (postId: string, userId: string) => Promise<void>;
 }
 
@@ -41,6 +48,19 @@ export const usePostManagementStore = create<PostManagementState>()(
         }
       },
 
+      fetchSinglePost: async (postId) => {
+        try {
+          const result = await postRepo().fetchSinglePost(postId); // Call the API method
+          set({ singlePost: result.data || null }); // Update the single post in the store
+          console.log("Single post fetched successfully:", result);
+        } catch (error) {
+          console.error(
+            `Failed to fetch single post with ID ${postId}:`,
+            error
+          );
+        }
+      },
+
       createPost: async (data) => {
         try {
           const result = await postRepo().createPost(data, data.userId); // Call the API method
@@ -53,6 +73,25 @@ export const usePostManagementStore = create<PostManagementState>()(
           console.log("Post created successfully:", result);
         } catch (error) {
           console.error("Failed to create post:", error);
+        }
+      },
+      editPost: async (
+        postId,
+        userId,
+        data: Partial<{
+          title: string;
+          description: string;
+          communityId: number;
+        }>
+      ) => {
+        try {
+          const result = await postRepo().editPost(postId, userId, data); // Call the API method
+          // Optionally, fetch the single post and the post list again to update the store
+          await get().fetchSinglePost(postId);
+          await get().fetchPostList({ search: get().search });
+          console.log(`Post with ID ${postId} edited successfully:`, result);
+        } catch (error) {
+          console.error(`Failed to edit post with ID ${postId}:`, error);
         }
       },
       deletePost: async (postId, userId) => {
